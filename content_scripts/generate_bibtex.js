@@ -1,22 +1,22 @@
 //returned array is guaranteed to not contain null values
-function queryStuff(selectorsInnerHTML, selectorsAttribute){
+function queryStuff(selectors){
 
   var result = [];
     
-  selectorsInnerHTML.forEach(function(currentValue, index, array){
-    var tag = document.querySelector(currentValue);
-    if(tag != null){
-      if(tag.innerHTML !== "")
-        result.push(tag.innerHTML);
-    }
-  });
-
-  selectorsAttribute.forEach(function(currentValue, index, array){
-    var tag = document.querySelector(currentValue[0]);
-    if(tag != null){
-      var attr = tag.getAttribute(currentValue[1]);
-      if(attr != null)
-        result.push(attr);
+  selectors.forEach(function(currentValue, index, array){
+    if(currentValue.constructor === Array){
+      var tag = document.querySelector(currentValue[0]);
+      if(tag != null){
+        var attr = tag.getAttribute(currentValue[1]);
+        if(attr != null)
+          result.push(attr);
+      }
+    }else {
+      var tag = document.querySelector(currentValue);
+      if(tag != null){
+        if(tag.innerHTML !== "")
+          result.push(tag.innerHTML);
+      }
     }
   });
 
@@ -26,14 +26,14 @@ function queryStuff(selectorsInnerHTML, selectorsAttribute){
 
 function getAuthor(){
 
-  var selectorsInnerHTML = [
+  var selectors = [
+    ['meta[name=author]', 'content'],
     '[rel=author] > [itemprop=name]',
     '[itemprop=author] > *',
     '[itemprop=author]'
   ];
-  var selectorsAttribute = [['meta[name=author]', 'content']];
 
-  var result = queryStuff(selectorsInnerHTML, selectorsAttribute);
+  var result = queryStuff(selectors);
 
   if(result.length != 0)
     return result;
@@ -44,17 +44,31 @@ function getAuthor(){
 
 function getTitle(){
 
-  var selectorsInnerHTML = [
+  var selectors = [
+    ['meta[name="DC.Title"', 'content'],
+    'h1[class*=headline] > *', 
     'h1[class*=headline]', 
+    'h2[class*=headline] > *', 
     'h2[class*=headline]', 
+    'h3[class*=headline] > *', 
     'h3[class*=headline]', 
+    'h1[class*=title] > *', 
+    'h1[class*=title]', 
+    'h2[class*=title] > *', 
+    'h2[class*=title]', 
+    'h3[class*=title] > *', 
+    'h3[class*=title]', 
     '[itemtype="http://schema.org/CreativeWork"] [itemprop=headline]',
+    '[itemtype="http://schema.org/NewsArticle"] [itemprop=headline]',
+    'main [itemtype="http://schema.org/Article"] [itemprop=headline]',
     '[itemtype="http://schema.org/BlogPosting"] [itemprop=name] > *', 
     '[itemtype="http://schema.org/BlogPosting"] [itemprop=name]', 
+    '[itemtype="http://schema.org/Question"] [itemprop=name] > *', 
+    '[itemtype="http://schema.org/Question"] [itemprop=name]', 
     'title'
   ];
 
-  var result = queryStuff(selectorsInnerHTML, []);
+  var result = queryStuff(selectors);
 
   if(result.length != 0)
     return result;
@@ -65,15 +79,17 @@ function getTitle(){
 
 function getYear(){
 
-  var selectorsInnerHTML = [
+  var selectors = [
+    '[itemprop=dateModified]',
     '[itemprop=datePublished]',
+    ['[itemprop=dateModified]', 'content'],
+    ['[itemprop=datePublished]', 'content'],
     '[id*=updated]',
+    ['time[pubdate]','pubdate'],
     'time'
   ];
-  var selectorsAttribute = [
-    ['time[pubdate]','pubdate']
-  ];
-  var query = queryStuff(selectorsInnerHTML, selectorsAttribute);
+
+  var query = queryStuff(selectors);
 
   if(query.length != 0){
     var result = [];
