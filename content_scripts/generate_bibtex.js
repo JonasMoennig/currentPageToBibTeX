@@ -1,7 +1,5 @@
-function getAuthor(){
+function queryStuff(selectorsInnerHTML, selectorsAttribute){
 
-  var selectorsInnerHTML = ['[itemprop=author]'];
-  var selectorsAttribute = [['meta[name=author]', 'content']];
   var result = [];
     
   selectorsInnerHTML.forEach(function(currentValue, index, array){
@@ -22,15 +20,41 @@ function getAuthor(){
 
 }
 
+function getAuthor(){
+
+  var selectorsInnerHTML = ['[itemprop=author]'];
+  var selectorsAttribute = [['meta[name=author]', 'content']];
+
+  var result = queryStuff(selectorsInnerHTML, selectorsAttribute);
+
+  if(result.length != 0)
+    return result;
+  else
+    return [""];
+
+}
+
 function getTitle(){
 
-  return [document.title];
+  var selectorsInnerHTML = ['title'];
+  var result = queryStuff(selectorsInnerHTML, []);
 
+  if(result.length != 0)
+    return result;
+  else
+    return [""];
+  
 }
 
 function getYear(){
 
-  return document.querySelector('[itemprop=datePublished]').innerHTML.match(/(\D|^)\d\d\d\d(\D|$)/g);
+  var selectorsInnerHTML = ['[itemprop=datePublished]'];
+  var result = queryStuff(selectorsInnerHTML, []);
+
+  if(result.length != 0)
+    return queryStuff(selectorsInnerHTML, [])[0].match(/(\D|^)\d\d\d\d(\D|$)/g);
+  else
+    return [""];
 
 }
 
