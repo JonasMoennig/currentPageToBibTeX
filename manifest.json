@@ -1,0 +1,27 @@
+{
+
+  "manifest_version": 2,
+  "name": "current_page_to_bibtex",
+  "version": "0.9",
+  
+  "description": "Converts the current page to a BibTeX entry",
+
+  "icons": {},
+
+  "applications": {
+    "gecko": {
+      "id": "current_page_to_bibtex@jonas-moennig.de",
+      "strict_min_version": "46.0"
+    }
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "browser_action": {
+    "default_title": "BibTeX",
+    "default_popup": "popup/bibtex.html"
+  }
+
+}
