@@ -1,3 +1,4 @@
+//returned array is guaranteed to not contain null values
 function queryStuff(selectorsInnerHTML, selectorsAttribute){
 
   var result = [];
@@ -5,14 +6,17 @@ function queryStuff(selectorsInnerHTML, selectorsAttribute){
   selectorsInnerHTML.forEach(function(currentValue, index, array){
     var tag = document.querySelector(currentValue);
     if(tag != null){
-      result.push(tag.innerHTML);
+      if(tag.innerHTML !== "")
+        result.push(tag.innerHTML);
     }
   });
 
   selectorsAttribute.forEach(function(currentValue, index, array){
     var tag = document.querySelector(currentValue[0]);
     if(tag != null){
-      result.push(tag.getAttribute(currentValue[1]));
+      var attr = tag.getAttribute(currentValue[1]);
+      if(attr != null)
+        result.push(attr);
     }
   });
 
@@ -22,7 +26,11 @@ function queryStuff(selectorsInnerHTML, selectorsAttribute){
 
 function getAuthor(){
 
-  var selectorsInnerHTML = ['[itemprop=author]'];
+  var selectorsInnerHTML = [
+    '[rel=author] > [itemprop=name]',
+    '[itemprop=author] > *',
+    '[itemprop=author]'
+  ];
   var selectorsAttribute = [['meta[name=author]', 'content']];
 
   var result = queryStuff(selectorsInnerHTML, selectorsAttribute);
@@ -36,7 +44,16 @@ function getAuthor(){
 
 function getTitle(){
 
-  var selectorsInnerHTML = ['title'];
+  var selectorsInnerHTML = [
+    'h1[class*=headline]', 
+    'h2[class*=headline]', 
+    'h3[class*=headline]', 
+    '[itemtype="http://schema.org/CreativeWork"] [itemprop=headline]',
+    '[itemtype="http://schema.org/BlogPosting"] [itemprop=name] > *', 
+    '[itemtype="http://schema.org/BlogPosting"] [itemprop=name]', 
+    'title'
+  ];
+
   var result = queryStuff(selectorsInnerHTML, []);
 
   if(result.length != 0)
@@ -48,14 +65,27 @@ function getTitle(){
 
 function getYear(){
 
-  var selectorsInnerHTML = ['[itemprop=datePublished]'];
-  var result = queryStuff(selectorsInnerHTML, []);
+  var selectorsInnerHTML = [
+    '[itemprop=datePublished]',
+    '[id*=updated]',
+    'time'
+  ];
+  var selectorsAttribute = [
+    ['time[pubdate]','pubdate']
+  ];
+  var query = queryStuff(selectorsInnerHTML, selectorsAttribute);
 
-  if(result.length != 0)
-    return queryStuff(selectorsInnerHTML, [])[0].match(/(\D|^)\d\d\d\d(\D|$)/g);
+  if(query.length != 0){
+    var result = [];
+    query.forEach(function(currentValue, index, array){
+      currentValue.match(/(\D|^)(\d\d\d\d)(\D|$)/g);
+      if(RegExp.$2 != null && RegExp.$2 !== "")
+        result.push(RegExp.$2); 
+    });
+    return result;
+  }
   else
     return [""];
-
 }
 
 function getURL(){
@@ -73,7 +103,7 @@ function getURLDate(){
 
 }
 
-function bibtex(request, sender, sendResponse){
+function generateBibtex(request, sender, sendResponse){
   
   var bibtex = "@online{cite_key, <br>" +
     "$indent$author = {$author$},<br>" + 
@@ -92,9 +122,9 @@ function bibtex(request, sender, sendResponse){
   bibtex = bibtex.replace(/\$indent\$/g, "&nbsp;&nbsp");
 
   sendResponse(bibtex);
-  chrome.runtime.onMessage.removeListener(bibtex);
+  chrome.runtime.onMessage.removeListener(generateBibtex);
 
   return true;
 }
 
-chrome.runtime.onMessage.addListener(bibtex);
+chrome.runtime.onMessage.addListener(generateBibtex);
