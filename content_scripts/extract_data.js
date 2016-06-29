@@ -15,7 +15,7 @@ function queryStuff(selectors){
       var tag = document.querySelector(currentValue);
       if(tag != null){
         if(tag.innerHTML !== "")
-          result.push(tag.innerHTML);
+          result.push(tag.textContent);
       }
     }
   });
@@ -29,6 +29,7 @@ function getAuthor(){
   var selectors = [
     ['meta[name=author]', 'content'],
     '[rel=author] > [itemprop=name]',
+    '[rel=author]',
     '[itemprop=author] > *',
     '[itemprop=author]'
   ];
@@ -52,6 +53,12 @@ function getTitle(){
     'h2[class*=headline]', 
     'h3[class*=headline] > *', 
     'h3[class*=headline]', 
+    'h1[class*=header] > *', 
+    'h1[class*=header]', 
+    'h2[class*=header] > *', 
+    'h2[class*=header]', 
+    'h3[class*=header] > *', 
+    'h3[class*=header]', 
     'h1[class*=title] > *', 
     'h1[class*=title]', 
     'h2[class*=title] > *', 
