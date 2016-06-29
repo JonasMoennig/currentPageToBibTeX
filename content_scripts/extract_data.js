@@ -106,7 +106,7 @@ function getYear(){
 
 function getURL(){
 
-  return [window.location]
+  return [window.location.toString()]
 
 }
 
@@ -119,28 +119,19 @@ function getURLDate(){
 
 }
 
-function generateBibtex(request, sender, sendResponse){
-  
-  var bibtex = "@online{cite_key, <br>" +
-    "$indent$author = {$author$},<br>" + 
-    "$indent$title = {$title$},<br>" + 
-    "$indent$year = $year$,<br>" + 
-    "$indent$url = {$url$},<br>" +
-    "$indent$urldate = {$urldate$}<br>" +
-    "}";
+function extractData(request, sender, sendResponse){
 
-  bibtex = bibtex.replace("$author$", getAuthor()[0]);
-  bibtex = bibtex.replace("$title$", getTitle()[0]);
-  bibtex = bibtex.replace("$year$", getYear()[0]);
-  bibtex = bibtex.replace("$url$", getURL()[0]);
-  bibtex = bibtex.replace("$urldate$", getURLDate()[0]);
+  var data = {'author': getAuthor(),
+    'title': getTitle(),
+    'year': getYear(),
+    'url': getURL(),
+    'urldate': getURLDate()
+  }
 
-  bibtex = bibtex.replace(/\$indent\$/g, "&nbsp;&nbsp");
-
-  sendResponse(bibtex);
-  chrome.runtime.onMessage.removeListener(generateBibtex);
+  sendResponse(data);
+  chrome.runtime.onMessage.removeListener(extractData);
 
   return true;
 }
 
-chrome.runtime.onMessage.addListener(generateBibtex);
+chrome.runtime.onMessage.addListener(extractData);
