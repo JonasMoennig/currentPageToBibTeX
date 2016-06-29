@@ -1,6 +1,5 @@
 #container{
   background-color: white;
-  display: none;
   position: absolute;
   z-index: 10;
 }
@@ -13,6 +12,7 @@ ul.menu{
 }
 
 ul.menu li{
+  font-size: 0.7em;
   padding: 0 1em;
 }
 

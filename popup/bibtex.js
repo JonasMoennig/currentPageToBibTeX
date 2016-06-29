@@ -17,15 +17,21 @@ function displayMenu(e){
   var ul = document.createElement("ul");
   ul.classList.add("menu");
   div.id = 'container';
-  div.style.display = 'block';
   div.style.left = e.pageX + 'px';
   div.style.top = e.pageY + 'px';
   div.appendChild(ul);
-  ul.innerHTML = "<li>test</li>" +
-    "<li>test</li>" +
-    "<li>test</li>" +
-    "<li>jonas</li>";
+
+  //populate menu
+  var id = e.target.id;
+  data[id].forEach(function(currentElement, index, array){
+    var li = document.createElement("li");
+    li.innerHTML = currentElement;
+    ul.appendChild(li);
+  });
+
   ul.addEventListener("click", function(e){
+    if(e.target.tagName == "LI")
+      document.getElementById(id).innerHTML = e.target.innerHTML;
     div.remove();
   });
   document.body.appendChild(div);
@@ -53,4 +59,4 @@ function generateBibtex(data){
 
 }
 
-document.getElementById("test").addEventListener('click', displayMenu);
+document.getElementById("bibtex").addEventListener('click', displayMenu);
