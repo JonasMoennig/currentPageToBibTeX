@@ -31,7 +31,8 @@ function getAuthor(){
     '[rel=author] > [itemprop=name]',
     '[rel=author]',
     '[itemprop=author] > *',
-    '[itemprop=author]'
+    '[itemprop=author]',
+    '.author'
   ];
 
   var result = queryStuff(selectors);
@@ -93,6 +94,7 @@ function getYear(){
     ['[itemprop=datePublished]', 'content'],
     '[id*=updated]',
     ['time[pubdate]','pubdate'],
+    '.post_date',
     'time'
   ];
 
