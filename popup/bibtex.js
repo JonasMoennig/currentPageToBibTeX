@@ -53,7 +53,7 @@ function generateBibtex(data){
   bibtex = bibtex.replace("$url$", data.url[0]);
   bibtex = bibtex.replace("$urldate$", data.urldate[0]);
 
-  bibtex = bibtex.replace(/\$indent\$/g, "&nbsp;&nbsp");
+  bibtex = bibtex.replace(/\$indent\$/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
 
   return bibtex;
 
