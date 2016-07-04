@@ -6,7 +6,9 @@
   
   "description": "Converts the current page to a BibTeX entry",
 
-  "icons": {},
+  "icons": {
+    "48": "icons/48.png" 
+  },
 
   "applications": {
     "gecko": {
@@ -20,6 +22,7 @@
   ],
 
   "browser_action": {
+    "default_icon": "icons/48.png",
     "default_title": "BibTeX",
     "default_popup": "popup/bibtex.html"
   }
