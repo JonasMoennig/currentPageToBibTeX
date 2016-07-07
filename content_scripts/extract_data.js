@@ -123,8 +123,15 @@ function getURLDate(){
 
   var now = new Date();
   var mon = now.getMonth()+1;
+  var day = now.getDate();
 
-  return [now.getFullYear() + "-" + mon + "-" + now.getDate()];
+  if(mon < 10)
+    mon = "0" + mon;
+
+  if(day < 10)
+    day = "0" + day;
+
+  return [now.getFullYear() + "-" + mon + "-" + day];
 
 }
 
