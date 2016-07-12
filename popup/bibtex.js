@@ -7,10 +7,26 @@ var data;
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
   chrome.tabs.sendMessage(tabs[0].id, {}, {}, function(result){
     data = result;
-    document.getElementById('bibtex').innerHTML = generateBibtex(data);
+    var bibtex = document.getElementById('bibtex');
+    bibtex.parentElement.replaceChild(buildFromTemplate(getTemplate()), bibtex);
+    ["author", "title", "year", "url", "urldate"].forEach(function(currentValue, index, array){
+      document.getElementById(currentValue).appendChild(document.createTextNode(data[currentValue][0]));
+    });
     return true;
   });
 });
+
+function getTemplate(){
+
+  return "@online{cite_key,$newline$" +
+    "$indent$author = {$author$},$newline$" + 
+    "$indent$title = {$title$},$newline$" + 
+    "$indent$year = $year$,$newline$" + 
+    "$indent$url = {$url$},$newline$" +
+    "$indent$urldate = {$urldate$}$newline$" +
+    "}";
+
+}
 
 function displayMenu(e){
   var div = document.createElement("div");
@@ -25,38 +41,44 @@ function displayMenu(e){
   var id = e.target.id;
   data[id].forEach(function(currentElement, index, array){
     var li = document.createElement("li");
-    li.innerHTML = currentElement;
+    li.appendChild(document.createTextNode(currentElement));
     ul.appendChild(li);
   });
 
   ul.addEventListener("click", function(e){
-    if(e.target.tagName == "LI")
-      document.getElementById(id).innerHTML = e.target.innerHTML;
+    if(e.target.tagName == "LI"){
+      var li = document.getElementById(id);
+      li.replaceChild(document.createTextNode(e.target.textContent), li.childNodes[0]);
+    }
     div.remove();
   });
   document.body.appendChild(div);
 }
 
-function generateBibtex(data){
- 
-  var bibtex = "@online{cite_key, <br>" +
-    "$indent$author = {<span id=author>$author$</span>},<br>" + 
-    "$indent$title = {<span id=title>$title$</span>},<br>" + 
-    "$indent$year = <span id=year>$year$</span>,<br>" + 
-    "$indent$url = {<span id=url>$url$</span>},<br>" +
-    "$indent$urldate = {<span id=urldate>$urldate$</span>}<br>" +
-    "}";
+function buildFromTemplate(template){
 
-  bibtex = bibtex.replace("$author$", data.author[0]);
-  bibtex = bibtex.replace("$title$", data.title[0]);
-  bibtex = bibtex.replace("$year$", data.year[0]);
-  bibtex = bibtex.replace("$url$", data.url[0]);
-  bibtex = bibtex.replace("$urldate$", data.urldate[0]);
+  var p = document.createElement("p");
+  p.addEventListener('click', displayMenu);
 
-  bibtex = bibtex.replace(/\$indent\$/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+  templateSplit = template.split("$");
+  templateSplit.forEach(function(currentValue, index, array){
+    if(["author", "title", "year", "url", "urldate"].includes(currentValue)){
+      var span = document.createElement("span");
+      span.id = currentValue;
+      p.appendChild(span);
+    }
+    else if(currentValue == "indent"){
+      p.appendChild(document.createTextNode("\u00A0\u00A0\u00A0\u00A0"));
+    }
+    else if(currentValue == "newline"){
+      p.appendChild(document.createElement("br"));
+    }
+    else {
+      p.appendChild(document.createTextNode(currentValue));
+    }
+  });
 
-  return bibtex;
+  return p;
 
 }
 
-document.getElementById("bibtex").addEventListener('click', displayMenu);
