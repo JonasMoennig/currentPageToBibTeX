@@ -8,23 +8,32 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
   chrome.tabs.sendMessage(tabs[0].id, {}, {}, function(result){
     data = result;
     var bibtex = document.getElementById('bibtex');
-    bibtex.parentElement.replaceChild(buildFromTemplate(getTemplate()), bibtex);
-    ["author", "title", "year", "url", "urldate"].forEach(function(currentValue, index, array){
-      document.getElementById(currentValue).appendChild(document.createTextNode(data[currentValue][0]));
+    getTemplate(function(template){
+      bibtex.parentElement.replaceChild(buildFromTemplate(template), bibtex);
+      ["author", "title", "year", "url", "urldate"].forEach(function(currentValue, index, array){
+        document.getElementById(currentValue).appendChild(document.createTextNode(data[currentValue][0]));
+      });
     });
     return true;
   });
 });
 
-function getTemplate(){
+function getTemplate(callback){
 
-  return "@online{cite_key,$newline$" +
-    "$indent$author = {$author$},$newline$" + 
-    "$indent$title = {$title$},$newline$" + 
-    "$indent$year = $year$,$newline$" + 
-    "$indent$url = {$url$},$newline$" +
-    "$indent$urldate = {$urldate$}$newline$" +
-    "}";
+  /**
+  chrome.storage.local.get("template", function(result){
+    return callback(result.template);
+  });*/
+
+  var template = `@online{cite_key,
+    author = {$author$},
+    title = {$title$},
+    year = $year$,
+    url = {$url$},
+    urldate = {$urldate$}
+}`;
+
+callback(template);
 
 }
 
@@ -36,6 +45,10 @@ function displayMenu(e){
   div.style.left = e.pageX + 'px';
   div.style.top = e.pageY + 'px';
   div.appendChild(ul);
+
+  div.addEventListener("mouseleave", function(e){
+    div.remove();
+  });
 
   //populate menu
   var id = e.target.id;
@@ -57,28 +70,22 @@ function displayMenu(e){
 
 function buildFromTemplate(template){
 
-  var p = document.createElement("p");
-  p.addEventListener('click', displayMenu);
+  var pre = document.createElement("pre");
+  pre.addEventListener('click', displayMenu);
 
   templateSplit = template.split("$");
   templateSplit.forEach(function(currentValue, index, array){
     if(["author", "title", "year", "url", "urldate"].includes(currentValue)){
       var span = document.createElement("span");
       span.id = currentValue;
-      p.appendChild(span);
-    }
-    else if(currentValue == "indent"){
-      p.appendChild(document.createTextNode("\u00A0\u00A0\u00A0\u00A0"));
-    }
-    else if(currentValue == "newline"){
-      p.appendChild(document.createElement("br"));
+      pre.appendChild(span);
     }
     else {
-      p.appendChild(document.createTextNode(currentValue));
+        pre.appendChild(document.createTextNode(currentValue));
     }
   });
 
-  return p;
+  return pre;
 
 }
 

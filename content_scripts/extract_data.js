@@ -9,13 +9,13 @@ function queryStuff(selectors){
       if(tag != null){
         var attr = tag.getAttribute(currentValue[1]);
         if(attr != null)
-          result.push(attr);
+          result.push(attr.trim());
       }
     }else {
       var tag = document.querySelector(currentValue);
       if(tag != null){
         if(tag.innerHTML !== "")
-          result.push(tag.textContent);
+          result.push(tag.textContent.trim());
       }
     }
   });
