@@ -20,20 +20,9 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 
 function getTemplate(callback){
 
-  /**
   chrome.storage.local.get("template", function(result){
     return callback(result.template);
-  });*/
-
-  var template = `@online{cite_key,
-    author = {$author$},
-    title = {$title$},
-    year = $year$,
-    url = {$url$},
-    urldate = {$urldate$}
-}`;
-
-callback(template);
+  });
 
 }
 

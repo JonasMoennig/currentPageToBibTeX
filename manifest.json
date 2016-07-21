@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "current_page_to_bibtex",
-  "version": "0.9.1",
+  "version": "1.0",
   
   "description": "Converts the current page to a BibTeX entry",
 
@@ -13,7 +13,7 @@
   "applications": {
     "gecko": {
       "id": "current_page_to_bibtex@jonas-moennig.de",
-      "strict_min_version": "46.0"
+      "strict_min_version": "48.0"
     }
   },
 
@@ -21,6 +21,10 @@
     "activeTab",
     "storage"
   ],
+
+  "background": {
+    "scripts": ["background-scripts/background.js"]
+  },
 
   "browser_action": {
     "default_icon": "icons/48.png",

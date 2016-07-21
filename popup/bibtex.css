@@ -4,9 +4,6 @@
   z-index: 10;
 }
 
-.overlay{
-}
-
 ul.menu{
   border: solid black;
   list-style: none;
@@ -15,7 +12,7 @@ ul.menu{
 }
 
 ul.menu li{
-  font-size: 0.7em;
+  font-size: 0.6em;
   padding: 0 1em;
 }
 
