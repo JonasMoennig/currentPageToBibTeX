@@ -61,6 +61,7 @@ function buildFromTemplate(template){
 
   var pre = document.createElement("pre");
   pre.addEventListener('click', displayMenu);
+  pre.setAttribute("contenteditable", "");
 
   templateSplit = template.split("$");
   templateSplit.forEach(function(currentValue, index, array){
