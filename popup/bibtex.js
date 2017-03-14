@@ -11,7 +11,10 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
     getTemplate(function(template){
       bibtex.parentElement.replaceChild(buildFromTemplate(template), bibtex);
       ["author", "title", "year", "url", "urldate"].forEach(function(currentValue, index, array){
-        document.getElementById(currentValue).appendChild(document.createTextNode(data[currentValue][0]));
+        var span = document.getElementById(currentValue);
+        if(span != null){
+          span.appendChild(document.createTextNode(data[currentValue][0]));
+        }
       });
     });
     return true;
