@@ -1,7 +1,7 @@
 //returned array is guaranteed to not contain null values
 function queryStuff(selectors){
 
-  var result = [];
+  var result = new Set();
     
   selectors.forEach(function(currentValue, index, array){
     if(currentValue.constructor === Array){
@@ -9,18 +9,18 @@ function queryStuff(selectors){
       if(tag != null){
         var attr = tag.getAttribute(currentValue[1]);
         if(attr != null)
-          result.push(attr.trim());
+          result.add(attr.trim());
       }
     }else {
       var tag = document.querySelector(currentValue);
       if(tag != null){
         if(tag.innerHTML !== "")
-          result.push(tag.textContent.trim());
+          result.add(tag.textContent.trim());
       }
     }
   });
 
-  return result;
+  return Array.from(result);
 
 }
 

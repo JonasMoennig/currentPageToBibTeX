@@ -44,6 +44,9 @@ function displayMenu(e){
 
   //populate menu
   var id = e.target.id;
+  if(data[id].length == 1){
+    return;
+  }
   data[id].forEach(function(currentElement, index, array){
     var li = document.createElement("li");
     li.appendChild(document.createTextNode(currentElement));
