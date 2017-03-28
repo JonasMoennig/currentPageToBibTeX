@@ -1,6 +1,6 @@
 function resetTemplate(){
 
-  var template = `@online{cite_key,
+  var template = `@online{$cite_key$,
     author = {$author$},
     title = {$title$},
     year = $year$,

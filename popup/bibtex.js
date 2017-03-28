@@ -10,7 +10,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
     var bibtex = document.getElementById('bibtex');
     getTemplate(function(template){
       bibtex.parentElement.replaceChild(buildFromTemplate(template), bibtex);
-      ["author", "title", "year", "url", "urldate"].forEach(function(currentValue, index, array){
+      ["author", "title", "year", "url", "urldate", "cite_key"].forEach(function(currentValue, index, array){
         var span = document.getElementById(currentValue);
         if(span != null){
           span.appendChild(document.createTextNode(data[currentValue][0]));
@@ -71,7 +71,7 @@ function buildFromTemplate(template){
 
   templateSplit = template.split("$");
   templateSplit.forEach(function(currentValue, index, array){
-    if(["author", "title", "year", "url", "urldate"].includes(currentValue)){
+    if(["author", "title", "year", "url", "urldate", "cite_key"].includes(currentValue)){
       var span = document.createElement("span");
       span.id = currentValue;
       pre.appendChild(span);

@@ -135,13 +135,21 @@ function getURLDate(){
 
 }
 
+function getCiteKey(){
+  //this works because getAuthor() and get Title always return a non-empty array
+  var author_array = getAuthor()[0].split(" ");
+  var title_array = getTitle()[0].split(" ");
+  return [author_array[author_array.length - 1] + getYear() + title_array[0]];
+}
+
 function extractData(request, sender, sendResponse){
 
   var data = {'author': getAuthor(),
     'title': getTitle(),
     'year': getYear(),
     'url': getURL(),
-    'urldate': getURLDate()
+    'urldate': getURLDate(),
+    'cite_key': getCiteKey()
   }
 
   sendResponse(data);
